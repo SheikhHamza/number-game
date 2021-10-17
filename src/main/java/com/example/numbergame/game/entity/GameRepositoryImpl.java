@@ -1,13 +1,13 @@
 package com.example.numbergame.game.entity;
 
 import com.example.numbergame.game.constant.GameStatus;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+@Component
 public class GameRepositoryImpl implements GameRepository {
 
   private static final Map<String, GameEntity> gameEntities = new HashMap<>();

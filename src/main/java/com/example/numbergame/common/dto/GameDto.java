@@ -2,7 +2,11 @@ package com.example.numbergame.common.dto;
 
 import com.example.numbergame.game.constant.GameStatus;
 import com.example.numbergame.game.entity.GameEntity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
+@JsonInclude(NON_NULL)
 public class GameDto {
   private String gameId;
   private String playerId;
@@ -27,6 +31,34 @@ public class GameDto {
     }
 
     return gameDto;
+  }
+
+  public String getGameId() {
+    return gameId;
+  }
+
+  public String getPlayerId() {
+    return playerId;
+  }
+
+  public GameStatus getGameStatus() {
+    return gameStatus;
+  }
+
+  public Integer getLastMove() {
+    return lastMove;
+  }
+
+  public Integer getCurrentNumber() {
+    return currentNumber;
+  }
+
+  public boolean isPlayerTurn() {
+    return playerTurn;
+  }
+
+  public GameResult getGameResult() {
+    return gameResult;
   }
 
   public enum GameResult {

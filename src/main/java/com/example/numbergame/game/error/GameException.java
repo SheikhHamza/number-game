@@ -3,21 +3,21 @@ package com.example.numbergame.game.error;
 import org.springframework.http.HttpStatus;
 
 public class GameException extends RuntimeException {
-    private String message;
-    private HttpStatus status;
+  private final String message;
+  private final HttpStatus status;
 
-    @Override
-    public String getMessage() {
-        return message;
-    }
+  public GameException(String message, HttpStatus status) {
+    super(message);
+    this.message = message;
+    this.status = status;
+  }
 
-    public HttpStatus getStatus() {
-        return status;
-    }
+  @Override
+  public String getMessage() {
+    return message;
+  }
 
-    public GameException(String message, HttpStatus status) {
-        super(message);
-        this.message = message;
-        this.status = status;
-    }
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

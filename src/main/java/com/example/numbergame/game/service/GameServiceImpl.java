@@ -3,6 +3,7 @@ package com.example.numbergame.game.service;
 import com.example.numbergame.common.dto.GameDto;
 import com.example.numbergame.common.dto.SendNumberRequest;
 import com.example.numbergame.game.constant.GameStatus;
+import com.example.numbergame.game.constant.MoveType;
 import com.example.numbergame.game.entity.GameEntity;
 import com.example.numbergame.game.entity.GameRepository;
 import com.example.numbergame.game.error.GameException;
@@ -45,32 +46,32 @@ public class GameServiceImpl implements GameService {
 
     boolean isFirstPlayer = isFirstPlayer(gameEntity, sendNumberRequest.getPlayerId());
 
+    checkPlayerTurn(gameEntity, isFirstPlayer);
+
     switch (gameEntity.getMoveType()) {
       case FIRST_MOVE:
         {
           gameEntity.setCurrentNumber(sendNumberRequest.getNumber());
           gameEntity.setLastMove(sendNumberRequest.getNumber());
           gameEntity.setPlayerOneTurn(Boolean.FALSE);
+          gameEntity.setMoveType(MoveType.REGULAR_MOVE);
           break;
         }
       case REGULAR_MOVE:
         {
-          if (REGULAR_MOVE_OPTIONS.contains(sendNumberRequest.getNumber())) {
-            Integer currentNumber = gameEntity.getCurrentNumber();
-            currentNumber = (currentNumber + sendNumberRequest.getNumber()) / 3;
-            gameEntity.setCurrentNumber(currentNumber);
-            gameEntity.setLastMove(sendNumberRequest.getNumber());
-            gameEntity.setPlayerOneTurn(!isFirstPlayer);
+          validateInput(sendNumberRequest.getNumber());
+          Integer currentNumber = gameEntity.getCurrentNumber();
+          currentNumber = (currentNumber + sendNumberRequest.getNumber()) / 3;
+          gameEntity.setCurrentNumber(currentNumber);
+          gameEntity.setLastMove(sendNumberRequest.getNumber());
+          gameEntity.setPlayerOneTurn(!isFirstPlayer);
 
-            if (currentNumber == 1) {
-              gameEntity.setGameStatus(GameStatus.FINISHED);
-            }
+          if (currentNumber == 1) {
+            gameEntity.setGameStatus(GameStatus.FINISHED);
           }
         }
-        return GameDto.from(gameEntity, isFirstPlayer, false);
     }
-
-    return null;
+    return GameDto.from(gameEntity, isFirstPlayer, false);
   }
 
   @Override
@@ -79,6 +80,12 @@ public class GameServiceImpl implements GameService {
     boolean isFirstPlayer = isFirstPlayer(gameEntity, playerId);
 
     return GameDto.from(gameEntity, isFirstPlayer, isFirstPlayer == gameEntity.getPlayerOneTurn());
+  }
+
+  private void checkPlayerTurn(GameEntity gameEntity, boolean isFirstPlayer) {
+    if (isFirstPlayer != gameEntity.getPlayerOneTurn()) {
+      throw new GameException("Please wait for other player's turn", HttpStatus.BAD_REQUEST);
+    }
   }
 
   private boolean isFirstPlayer(GameEntity gameEntity, String playerId) {
@@ -102,7 +109,9 @@ public class GameServiceImpl implements GameService {
     return Double.toHexString(Math.random());
   }
 
-  private boolean isFinished(Integer number) {
-    return number == 1;
+  private void validateInput(Integer number) {
+    if (!REGULAR_MOVE_OPTIONS.contains(number)) {
+      throw new GameException("Number can be -1,0, or 1", HttpStatus.BAD_REQUEST);
+    }
   }
 }
