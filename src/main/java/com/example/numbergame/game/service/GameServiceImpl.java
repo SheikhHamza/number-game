@@ -2,10 +2,10 @@ package com.example.numbergame.game.service;
 
 import com.example.numbergame.common.dto.GameDto;
 import com.example.numbergame.common.dto.SendNumberRequest;
+import com.example.numbergame.common.error.GameException;
 import com.example.numbergame.game.constant.GameStatus;
 import com.example.numbergame.game.entity.GameEntity;
 import com.example.numbergame.game.entity.GameRepository;
-import com.example.numbergame.common.error.GameException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class GameServiceImpl implements GameService {
     if (existingGame.isPresent()) {
       String playerTwoId = getNewPlayerId();
       existingGame.get().setPlayerTwoId(playerTwoId);
-      return GameDto.from(existingGame.get(), false, true);
+      return GameDto.from(existingGame.get(), false, !existingGame.get().getPlayerOneTurn());
     }
 
     GameEntity newGame = new GameEntity(getNewPlayerId());
