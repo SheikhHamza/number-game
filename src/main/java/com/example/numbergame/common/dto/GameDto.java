@@ -4,6 +4,8 @@ import com.example.numbergame.game.constant.GameStatus;
 import com.example.numbergame.game.entity.GameEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @JsonInclude(NON_NULL)
@@ -15,6 +17,7 @@ public class GameDto {
   private Integer currentNumber;
   private boolean playerTurn;
   private GameResult gameResult;
+  private List<Integer> inputOptions;
 
   public static GameDto from(GameEntity gameEntity, boolean isFirstPlayer, boolean playerTurn) {
     GameDto gameDto = new GameDto();
@@ -29,8 +32,14 @@ public class GameDto {
     if (GameStatus.FINISHED.equals(gameEntity.getGameStatus())) {
       gameDto.gameResult = !playerTurn ? GameResult.WINNER : GameResult.LOSER;
     }
-
+    if (gameEntity.getMoveType() != null) {
+      gameDto.inputOptions = gameEntity.getMoveType().getInputOptions();
+    }
     return gameDto;
+  }
+
+  public List<Integer> getInputOptions() {
+    return inputOptions;
   }
 
   public String getGameId() {

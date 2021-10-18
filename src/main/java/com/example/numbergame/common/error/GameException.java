@@ -1,4 +1,4 @@
-package com.example.numbergame.game.error;
+package com.example.numbergame.common.error;
 
 import org.springframework.http.HttpStatus;
 

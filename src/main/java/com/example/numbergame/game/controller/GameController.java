@@ -2,7 +2,7 @@ package com.example.numbergame.game.controller;
 
 import com.example.numbergame.common.dto.GameDto;
 import com.example.numbergame.common.dto.SendNumberRequest;
-import com.example.numbergame.game.error.GameException;
+import com.example.numbergame.common.error.GameException;
 import com.example.numbergame.game.service.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

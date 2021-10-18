@@ -1,4 +1,4 @@
-package com.example.numbergame.game.error;
+package com.example.numbergame.common.error;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(value = GameException.class)
+  @ExceptionHandler(value = {GameException.class, PlayerException.class})
   protected ResponseEntity<Object> handleConflict(GameException ex, WebRequest request) {
     return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), ex.getStatus(), request);
   }

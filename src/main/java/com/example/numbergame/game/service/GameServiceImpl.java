@@ -3,22 +3,20 @@ package com.example.numbergame.game.service;
 import com.example.numbergame.common.dto.GameDto;
 import com.example.numbergame.common.dto.SendNumberRequest;
 import com.example.numbergame.game.constant.GameStatus;
-import com.example.numbergame.game.constant.MoveType;
 import com.example.numbergame.game.entity.GameEntity;
 import com.example.numbergame.game.entity.GameRepository;
-import com.example.numbergame.game.error.GameException;
+import com.example.numbergame.common.error.GameException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
+
+import static com.example.numbergame.game.constant.MoveType.REGULAR_MOVE;
 
 @Service
 public class GameServiceImpl implements GameService {
 
   private final GameRepository gameRepository;
-  private final List<Integer> REGULAR_MOVE_OPTIONS = Arrays.asList(-1, 0, 1);
 
   public GameServiceImpl(GameRepository gameRepository) {
     this.gameRepository = gameRepository;
@@ -54,7 +52,7 @@ public class GameServiceImpl implements GameService {
           gameEntity.setCurrentNumber(sendNumberRequest.getNumber());
           gameEntity.setLastMove(sendNumberRequest.getNumber());
           gameEntity.setPlayerOneTurn(Boolean.FALSE);
-          gameEntity.setMoveType(MoveType.REGULAR_MOVE);
+          gameEntity.setMoveType(REGULAR_MOVE);
           break;
         }
       case REGULAR_MOVE:
@@ -110,8 +108,9 @@ public class GameServiceImpl implements GameService {
   }
 
   private void validateInput(Integer number) {
-    if (!REGULAR_MOVE_OPTIONS.contains(number)) {
-      throw new GameException("Number can be -1,0, or 1", HttpStatus.BAD_REQUEST);
+    if (!REGULAR_MOVE.getInputOptions().contains(number)) {
+      throw new GameException(
+          "Number can be " + REGULAR_MOVE.getInputOptions(), HttpStatus.BAD_REQUEST);
     }
   }
 }
